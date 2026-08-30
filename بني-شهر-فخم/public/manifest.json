@@ -1,0 +1,24 @@
+{
+  "name": "ديار بني شهر - بوابة التراث والسياحة",
+  "short_name": "بني شهر",
+  "description": "البوابة المتكاملة لتراث وتاريخ منطقة بني شهر والمعالم السياحية والخدمات في تنومة والنماص وسراة عسير",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1c1917",
+  "theme_color": "#064e3b",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/src/assets/images/app_icon_logo_1787489594079.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/src/assets/images/app_icon_logo_1787489594079.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

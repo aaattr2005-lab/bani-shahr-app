@@ -1,0 +1,149 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Deny Default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'aaattr2005@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // Tribal Units & Sections (Public Read, Admin/Supervisor write)
+    match /tribes/{tribeId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Villages and Geographic Sites (Public Read, Admin write)
+    match /villages/{villageId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Genealogy Nodes (Public Read, Admin/Verified write)
+    match /genealogy/{nodeId} {
+      allow read: if true;
+      allow create, update: if isSignedIn() && (
+        isAdmin() || (request.resource.data.created_by == request.auth.uid)
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Historical Documents & Manuscripts (Public Read, Admin/Owner write)
+    match /documents/{docId} {
+      allow read: if true;
+      allow create, update: if isSignedIn() && (
+        isAdmin() || (request.resource.data.uploaded_by == request.auth.uid)
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Historical Sources & References (Public Read, Admin write)
+    match /sources/{sourceId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Community Memory Contributions (Public Read, Authenticated Submit & Owner edit)
+    match /memory_contributions/{contributionId} {
+      allow read: if true;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && (
+        isAdmin() ||
+        (resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid) ||
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likesCount'])
+      );
+      allow delete: if isSignedIn() && (isAdmin() || resource.data.userId == request.auth.uid);
+    }
+
+    // Tribal Supervisor Nominations (Allow create for applicants, Read & Update for status tracking)
+    match /supervisor_nominations/{nominationId} {
+      allow create, read: if true;
+      allow update, delete: if true;
+    }
+
+    // Push & Real-time Notifications (Supervisors and Users)
+    match /push_notifications/{notificationId} {
+      allow create, read: if true;
+      allow update, delete: if true;
+    }
+
+    // User Profiles (Private or Self-Managed)
+    match /users/{userId} {
+      allow read: if true;
+      allow create, update: if isOwner(userId) || isAdmin();
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+
+    // Orders & Food Purchases
+    match /orders/{orderId} {
+      allow read: if isSignedIn() || true;
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // Bookings (Guides & Experiences)
+    match /guide_bookings/{bookingId} {
+      allow read, create: if true;
+      allow update, delete: if isAdmin() || isSignedIn();
+    }
+
+    match /experience_bookings/{bookingId} {
+      allow read, create: if true;
+      allow update, delete: if isAdmin() || isSignedIn();
+    }
+
+    // Lineage Requests
+    match /lineage_requests/{requestId} {
+      allow read, create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // Chat Conversations & Messages
+    match /chat_conversations/{convId} {
+      allow read, write: if true;
+    }
+
+    match /chat_messages/{msgId} {
+      allow read, create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // Complaints & Support
+    match /complaints/{complaintId} {
+      allow read, create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // Audit Logs (Admins Only for writes, Admin/Supervisors for reads)
+    match /audit_logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if true;
+      allow update, delete: if false;
+    }
+
+    // Test connection check
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

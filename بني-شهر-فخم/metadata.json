@@ -1,0 +1,6 @@
+{
+  "name": "بني شهر - التراث والسياحة",
+  "description": "بوابة متكاملة للتعريف بتاريخ وتراث منطقة بني شهر واستكشاف المعالم السياحية والمسارات الجبلية وخدمات الضيافة مع مرشد سياحي وتراثي ذكي.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

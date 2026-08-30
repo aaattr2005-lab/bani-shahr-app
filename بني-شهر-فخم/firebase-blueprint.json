@@ -1,0 +1,203 @@
+{
+  "entities": {
+    "TribalUnit": {
+      "title": "TribalUnit",
+      "description": "Tribal organizational units including confederations, sections, tribes, and clans of Bani Shahr",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier" },
+        "name": { "type": "string", "description": "Name of the tribal unit" },
+        "parent_id": { "type": "string", "description": "Identifier of parent tribal branch" },
+        "unit_type": { "type": "string", "enum": ["confederation", "section", "tribe", "clan", "sub_clan", "family"], "description": "Level in tribal hierarchy" },
+        "path": { "type": "string", "description": "Hierarchical path representation" },
+        "description": { "type": "string", "description": "Historical notes and overview" },
+        "location_summary": { "type": "string", "description": "Geographical location summary" },
+        "is_active": { "type": "boolean", "description": "Status flag" },
+        "display_order": { "type": "number", "description": "Sorting index" },
+        "created_at": { "type": "string", "description": "Timestamp created" }
+      },
+      "required": ["name", "unit_type"]
+    },
+    "Village": {
+      "title": "Village",
+      "description": "Villages, historic forts, valleys and locations across Bani Shahr",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier" },
+        "unit_id": { "type": "string", "description": "Associated tribal unit ID" },
+        "name": { "type": "string", "description": "Village or site name" },
+        "type": { "type": "string", "enum": ["village", "fort", "historical_site", "valley", "mountain", "market"], "description": "Place type" },
+        "latitude": { "type": "number", "description": "Latitude coordinate" },
+        "longitude": { "type": "number", "description": "Longitude coordinate" },
+        "altitude_meters": { "type": "number", "description": "Elevation in meters" },
+        "historical_overview": { "type": "string", "description": "Historical background and description" },
+        "is_active": { "type": "boolean", "description": "Whether active" }
+      },
+      "required": ["name", "unit_id"]
+    },
+    "GenealogyNode": {
+      "title": "GenealogyNode",
+      "description": "Person node in the genealogy lineage tree",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier" },
+        "full_name": { "type": "string", "description": "Full ancestral name" },
+        "parent_id": { "type": "string", "description": "Father's node ID" },
+        "unit_id": { "type": "string", "description": "Tribal unit ID" },
+        "village_id": { "type": "string", "description": "Associated village ID" },
+        "gender": { "type": "string", "enum": ["male", "female"], "description": "Gender" },
+        "generation_level": { "type": "number", "description": "Generation depth in tree" },
+        "birth_hijri_year": { "type": "number", "description": "Approximate Hijri birth year" },
+        "death_hijri_year": { "type": "number", "description": "Hijri death year" },
+        "is_historical_figure": { "type": "boolean", "description": "Whether notable historical figure" },
+        "biography": { "type": "string", "description": "Biography and historical achievements" },
+        "verification_status": { "type": "string", "enum": ["pending_review", "verified", "disputed"], "description": "Verification status" },
+        "created_by": { "type": "string", "description": "UID of submitter" }
+      },
+      "required": ["full_name", "unit_id"]
+    },
+    "HistoricalDocument": {
+      "title": "HistoricalDocument",
+      "description": "Historical manuscripts, photographic archives, and treaties",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier" },
+        "title": { "type": "string", "description": "Document title" },
+        "document_type": { "type": "string", "enum": ["photo", "manuscript", "deed", "video", "audio", "document"], "description": "Media type" },
+        "storage_path": { "type": "string", "description": "URL or storage path" },
+        "description": { "type": "string", "description": "Historical context and description" },
+        "document_date_hijri": { "type": "string", "description": "Estimated Hijri date" },
+        "unit_id": { "type": "string", "description": "Associated tribal unit" },
+        "is_public": { "type": "boolean", "description": "Public visibility" },
+        "uploaded_by": { "type": "string", "description": "UID of uploader" }
+      },
+      "required": ["title", "document_type"]
+    },
+    "HistoricalReference": {
+      "title": "HistoricalReference",
+      "description": "Published sources, references, books and oral narrations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier" },
+        "title": { "type": "string", "description": "Reference title" },
+        "author": { "type": "string", "description": "Author or researcher name" },
+        "source_type": { "type": "string", "enum": ["book", "manuscript", "oral_history", "government_document", "inscription", "treaty"], "description": "Source category" },
+        "hijri_date": { "type": "string", "description": "Publication or recording date" },
+        "summary": { "type": "string", "description": "Summary of historical contents" }
+      },
+      "required": ["title", "source_type"]
+    },
+    "MemoryContribution": {
+      "title": "MemoryContribution",
+      "description": "Community submitted memories, heritage photos, and oral history narratives",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier" },
+        "userId": { "type": "string", "description": "UID of submitter" },
+        "userName": { "type": "string", "description": "Name of contributor" },
+        "userTribe": { "type": "string", "description": "Tribal lineage of contributor" },
+        "title": { "type": "string", "description": "Contribution title" },
+        "content": { "type": "string", "description": "Narrative or memory content" },
+        "category": { "type": "string", "description": "Category (historical, story, poem, photo, craft)" },
+        "imageUrl": { "type": "string", "description": "Image URL if attached" },
+        "location": { "type": "string", "description": "Place or village referenced" },
+        "year": { "type": "string", "description": "Estimated period" },
+        "likesCount": { "type": "number", "description": "Number of likes" },
+        "status": { "type": "string", "enum": ["published", "pending_review"], "description": "Moderation status" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["title", "content", "userId"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with personal tribal affiliation and permissions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "User UID matching auth.uid" },
+        "displayName": { "type": "string", "description": "Full name" },
+        "email": { "type": "string", "description": "Email address" },
+        "tribeAffiliation": { "type": "string", "description": "Tribal branch" },
+        "village": { "type": "string", "description": "Home village" },
+        "role": { "type": "string", "enum": ["user", "guide", "supervisor", "admin"], "description": "User access role" },
+        "createdAt": { "type": "string", "description": "Registration date" }
+      },
+      "required": ["id", "displayName"]
+    },
+    "SupervisorNomination": {
+      "title": "SupervisorNomination",
+      "description": "Nomination requests for tribal supervisors",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique nomination identifier" },
+        "fullName": { "type": "string", "description": "Full quadruplicate applicant name" },
+        "phone": { "type": "string", "description": "Contact phone number" },
+        "tribeId": { "type": "string", "description": "Target tribe ID" },
+        "tribeName": { "type": "string", "description": "Target tribe name" },
+        "fakhdh": { "type": "string", "description": "Fakhdh or branch" },
+        "village": { "type": "string", "description": "Home village / residence" },
+        "qualifications": { "type": "string", "description": "Reason and qualifications for supervision" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"], "description": "Approval status" },
+        "createdAt": { "type": "string", "description": "Date submitted" }
+      },
+      "required": ["fullName", "phone", "tribeId", "tribeName"]
+    },
+    "PushNotification": {
+      "title": "PushNotification",
+      "description": "Push and real-time notifications for supervisors and users",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique notification identifier" },
+        "title": { "type": "string", "description": "Notification title" },
+        "body": { "type": "string", "description": "Notification content body" },
+        "type": { "type": "string", "enum": ["supervisor_nomination_new", "nomination_approved", "nomination_rejected", "lineage_request", "broadcast_alert", "weather_alert", "system"], "description": "Notification category" },
+        "targetRole": { "type": "string", "description": "Target audience role (supervisor, admin, user, all)" },
+        "targetUserId": { "type": "string", "description": "Target user ID or phone" },
+        "targetTribeId": { "type": "string", "description": "Target tribe ID" },
+        "nominationId": { "type": "string", "description": "Related nomination ID" },
+        "nominationApplicantName": { "type": "string", "description": "Applicant full name" },
+        "nominationTribeName": { "type": "string", "description": "Tribe name" },
+        "status": { "type": "string", "enum": ["unread", "read"], "description": "Read status" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["title", "body", "type"]
+    }
+  },
+  "firestore": {
+    "/tribes/{tribeId}": {
+      "schema": "TribalUnit",
+      "description": "Tribal sections and organizational branches of Bani Shahr"
+    },
+    "/villages/{villageId}": {
+      "schema": "Village",
+      "description": "Villages, locations and landmarks in Bani Shahr"
+    },
+    "/genealogy/{nodeId}": {
+      "schema": "GenealogyNode",
+      "description": "Genealogical nodes, historical lineage, and family tree records"
+    },
+    "/documents/{docId}": {
+      "schema": "HistoricalDocument",
+      "description": "Historical manuscripts, treaties, deeds, and media documents"
+    },
+    "/sources/{sourceId}": {
+      "schema": "HistoricalReference",
+      "description": "Bibliographic references and historical books"
+    },
+    "/memory_contributions/{contributionId}": {
+      "schema": "MemoryContribution",
+      "description": "Community heritage contributions, historical oral stories, and photos"
+    },
+    "/supervisor_nominations/{nominationId}": {
+      "schema": "SupervisorNomination",
+      "description": "Tribal supervisor registration and nomination submissions"
+    },
+    "/push_notifications/{notificationId}": {
+      "schema": "PushNotification",
+      "description": "Real-time push notifications for supervisors and applicant users"
+    },
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profiles and settings"
+    }
+  }
+}
